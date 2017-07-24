@@ -12,6 +12,22 @@
 
 @implementation NSData (ImageContentType)
 
+/**
+ case 0xFF:
+ return @"image/jpeg";
+ case 0x89:
+ return @"image/png";
+ case 0x47:
+ return @"image/gif";
+ case 0x49:
+ case 0x4D:
+ return @"image/tiff";
+ case 0x52:
+ return @"image/webp"
+
+ @param data <#data description#>
+ @return <#return value description#>
+ */
 + (SDImageFormat)sd_imageFormatForImageData:(nullable NSData *)data {
     if (!data) {
         return SDImageFormatUndefined;

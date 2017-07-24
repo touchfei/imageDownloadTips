@@ -25,6 +25,14 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 @interface SDWebImageDownloaderOperation ()
 
+
+/**
+ 数组中存放的是SDCallbacksDictionary类型的字典，上面已定义
+ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;,
+ key是一个字符串，有两种情况:kProgressCallbackKey和kCompletedCallbackKey,
+ 也就是说进度和完成的回调都是放到一个数组中的,
+ 那么字典的值就是回调的block
+ */
 @property (strong, nonatomic, nonnull) NSMutableArray<SDCallbacksDictionary *> *callbackBlocks;
 
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
@@ -33,6 +41,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 // This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run
 // the task associated with this operation
+// unownedSession属性是在初始化时候通过传进来的参数设置，但是这个参数不一定是可用的，也就是说是不安全的。当出现不可用的情况的时候，就需要使用ownedSession 属性
 @property (weak, nonatomic, nullable) NSURLSession *unownedSession;
 // This is set if we're using not using an injected NSURLSession. We're responsible of invalidating this one
 @property (strong, nonatomic, nullable) NSURLSession *ownedSession;
@@ -52,6 +61,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 #if SD_UIKIT || SD_WATCH
     UIImageOrientation orientation;
 #endif
+    // 设置是否需要缓存响应，默认为YES
     BOOL responseFromCached;
 }
 
@@ -84,6 +94,14 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     SDDispatchQueueRelease(_barrierQueue);
 }
 
+
+//2.添加响应者
+/**
+ dispatch_barrier_sync控制了任务往队列添加这一过程，只有当我的任务完成之后，才能往队列中添加任务；
+ dispatch_barrier_async不会控制队列添加任务。但是只有当我的任务完成后，队列中后边的任务才会执行；
+ 那么在这里的任务是往数组中添加数据，对顺序没什么要求，我们采取dispatch_barrier_async就可以了，已经能保证数据添加的安全性了
+ */
+
 - (nullable id)addHandlersForProgress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                             completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock {
     SDCallbacksDictionary *callbacks = [NSMutableDictionary new];
@@ -95,6 +113,23 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     return callbacks;
 }
 
+
+/**
+ 
+ 这个方法是根据key取出所有符合key的block，
+ 这里采用了同步的方式，相当于加锁。比较有意思的是[self.callbackBlocks valueForKey:key]这段代码，self.callbackBlocks是一个数组,比如
+ @[
+  @{@"completed" : Block1},
+  @{@"progress" : Block2},
+  @{@"completed" : Block3},
+  @{@"progress" : Block4},
+  @{@"completed" : Block5},
+  @{@"progress" : Block6}
+ ]
+ 
+ 调用[self.callbackBlocks valueForKey:@"progress"]后会得到[Block2, Block4, Block6].
+ removeObjectIdenticalTo:这个方法会移除数组中指定相同地址的元素
+ */
 - (nullable NSArray<id> *)callbacksForKey:(NSString *)key {
     __block NSMutableArray<id> *callbacks = nil;
     dispatch_sync(self.barrierQueue, ^{
@@ -105,6 +140,13 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     return [callbacks copy];    // strip mutability here
 }
 
+/**就是取消某一回调。
+ 使用了dispatch_barrier_sync，
+ 保证，必须该队列之前的任务都完成，且该取消任务结束后，在将其他的任务加入队列
+ 
+ [array removeObject:(id)] :删除数组中指定元素，根据对象isEqual消息判断
+ [array removeObjectIdenticalTo:(id)] : 删除数组中指定元素,根据对象的地址判断
+ */
 - (BOOL)cancel:(nullable id)token {
     __block BOOL shouldCancel = NO;
     dispatch_barrier_sync(self.barrierQueue, ^{
@@ -119,8 +161,12 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     return shouldCancel;
 }
 
+// 3.开启下载任务
+
 - (void)start {
     @synchronized (self) {
+        
+        // 如果该任务已经被设置为取消了，那么就无需开启下载任务了。并重置。别忘了设置finished为YES
         if (self.isCancelled) {
             self.finished = YES;
             [self reset];
@@ -128,6 +174,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         }
 
 #if SD_UIKIT
+        
+        // 开启后台任务
         Class UIApplicationClass = NSClassFromString(@"UIApplication");
         BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
         if (hasApplication && [self shouldContinueWhenAppEntersBackground]) {
@@ -145,6 +193,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
             }];
         }
 #endif
+        
+//        task开启前的准备工作
         NSURLSession *session = self.unownedSession;
         if (!self.unownedSession) {
             NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -165,6 +215,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         self.executing = YES;
     }
     
+    // 开启task 并处理回调
     [self.dataTask resume];
 
     if (self.dataTask) {
@@ -179,6 +230,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     }
 
 #if SD_UIKIT
+    
+    //  开启后，确保关闭后台任务
     Class UIApplicationClass = NSClassFromString(@"UIApplication");
     if(!UIApplicationClass || ![UIApplicationClass respondsToSelector:@selector(sharedApplication)]) {
         return;
@@ -252,6 +305,19 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 #pragma mark NSURLSessionDataDelegate
 
+/**
+ 200:访问成功（表示一切正常，返回的是正常请求结果）
+ 302：临时重定向（指出被请求的文档已被临时移动到别处，此文档的新的URL在Location响应头中给出）
+ 304：未修改（表示客户机缓存的版本是最新的，客户机应该继续使用它。）
+ 404：访问的文件不存在（服务器上不存在客户机所请求的资源）
+ 500：内部服务器错误（服务器端的CGI、ASP、JSP等程序发生错误）
+ 
+ 把没有收到响应码或者响应码小于400认定为正常的情况，其中304比较特殊，
+ 因为当stateCode为304的时候，便是这个响应没有变化，可以再缓存中读取。
+ 那么其他的情况，就可以认定为错误的请求
+ 
+ */
+//4.处理下载过程和结束后的事情
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
@@ -260,6 +326,8 @@ didReceiveResponse:(NSURLResponse *)response
     //'304 Not Modified' is an exceptional one
     if (![response respondsToSelector:@selector(statusCode)] || (((NSHTTPURLResponse *)response).statusCode < 400 && ((NSHTTPURLResponse *)response).statusCode != 304)) {
         NSInteger expected = response.expectedContentLength > 0 ? (NSInteger)response.expectedContentLength : 0;
+        
+        // 属性赋值
         self.expectedSize = expected;
         for (SDWebImageDownloaderProgressBlock progressBlock in [self callbacksForKey:kProgressCallbackKey]) {
             progressBlock(0, expected, self.request.URL);
