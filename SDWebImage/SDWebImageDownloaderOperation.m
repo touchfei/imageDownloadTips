@@ -363,6 +363,8 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
+
+// 即使图片没有下载完，我们也能根据已经获取的图片数据，来显示一张数据不完整的图片
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
     [self.imageData appendData:data];
 
@@ -450,6 +452,7 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
+// 用于响应的缓存设置，如果把回调的参数设置为nil，那么就不会缓存响应，总之，真正缓存的数据就是回调中的参数
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
  willCacheResponse:(NSCachedURLResponse *)proposedResponse
@@ -524,6 +527,15 @@ didReceiveResponse:(NSURLResponse *)response
     [self done];
 }
 
+/**
+ 
+ 当我们发出了一个请求，这个请求到达服务器后，假定服务器设置了需要验证。
+ 那么这个方法就会被调用。服务器会返回去一个NSURLAuthenticationChallenge。
+ 通过NSURLAuthenticationChallenge的protectionSpace,获取授权method。
+ 如果这个method是服务器信任的， 那么我们就可以直接使用服务器返回的证书，
+ 当然，我们也可以使用自己的证书，其他情况都会被认为验证失败，当前请求将会被取消。
+ 当有了证书后，客户端就可以使用证书中的公钥对数据进行加密了。
+ */
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
     
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;

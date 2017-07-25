@@ -1,18 +1,18 @@
 //
-//  imageWebUITests.m
-//  imageWebUITests
+//  DownloadTestUITests.m
+//  DownloadTestUITests
 //
-//  Created by gaofei on 2017/7/24.
+//  Created by gaofei on 2017/7/25.
 //  Copyright © 2017年 Formssi. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
 
-@interface imageWebUITests : XCTestCase
+@interface DownloadTestUITests : XCTestCase
 
 @end
 
-@implementation imageWebUITests
+@implementation DownloadTestUITests
 
 - (void)setUp {
     [super setUp];

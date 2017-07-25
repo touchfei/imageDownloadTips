@@ -31,6 +31,7 @@
 
 @implementation SDWebImageDownloader
 
+// 绑定状态栏 转 小菊花
 + (void)initialize {
     // Bind SDNetworkActivityIndicator if available (download it here: http://github.com/rs/SDNetworkActivityIndicator )
     // To use it, just add #import "SDNetworkActivityIndicator.h" in addition to the SDWebImage import
@@ -67,6 +68,13 @@
     return [self initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
 }
 
+/**
+ 初始化，默认最大支持的并发数为6个，也就是说可以同时下载6张图片。
+ `image/webp,image/;q=0.8是什么意思，
+ image/webp是web格式的图片，q=0.8指的是权重系数为0.8，
+ q的取值范围是0 - 1， 默认值为1，q作用于它前边分号;前边的内容。
+ 在这里，image/webp,image/;q=0.8表示优先接受image/webp,其次接受image/`的图片
+ */
 - (nonnull instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)sessionConfiguration {
     if ((self = [super init])) {
         _operationClass = [SDWebImageDownloaderOperation class];
@@ -147,37 +155,47 @@
 
     return [self addProgressCallback:progressBlock completedBlock:completedBlock forURL:url createCallback:^SDWebImageDownloaderOperation *{
         __strong __typeof (wself) sself = wself;
+        
+        // 1.设置超时时间
         NSTimeInterval timeoutInterval = sself.downloadTimeout;
         if (timeoutInterval == 0.0) {
             timeoutInterval = 15.0;
         }
 
         // In order to prevent from potential duplicate caching (NSURLCache + SDImageCache) we disable the cache for image requests if told otherwise
+        // 2.创建request，注意我们设置的缓存策略的选择
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:(options & SDWebImageDownloaderUseNSURLCache ? NSURLRequestUseProtocolCachePolicy : NSURLRequestReloadIgnoringLocalCacheData) timeoutInterval:timeoutInterval];
         request.HTTPShouldHandleCookies = (options & SDWebImageDownloaderHandleCookies);
         request.HTTPShouldUsePipelining = YES;
+         // 3.设置请求头部
         if (sself.headersFilter) {
             request.allHTTPHeaderFields = sself.headersFilter(url, [sself.HTTPHeaders copy]);
         }
         else {
             request.allHTTPHeaderFields = sself.HTTPHeaders;
         }
+        // 4.创建操作对象
         SDWebImageDownloaderOperation *operation = [[sself.operationClass alloc] initWithRequest:request inSession:sself.session options:options];
         operation.shouldDecompressImages = sself.shouldDecompressImages;
-        
+        //
+        // 5.给操作对象设置urlCredential
         if (sself.urlCredential) {
             operation.credential = sself.urlCredential;
         } else if (sself.username && sself.password) {
             operation.credential = [NSURLCredential credentialWithUser:sself.username password:sself.password persistence:NSURLCredentialPersistenceForSession];
         }
         
+        // 6.设置操作级别
         if (options & SDWebImageDownloaderHighPriority) {
             operation.queuePriority = NSOperationQueuePriorityHigh;
         } else if (options & SDWebImageDownloaderLowPriority) {
             operation.queuePriority = NSOperationQueuePriorityLow;
         }
 
+         // 7.把操作添加到队列
         [sself.downloadQueue addOperation:operation];
+        
+         // 8.根据executionOrder设置，设置依赖
         if (sself.executionOrder == SDWebImageDownloaderLIFOExecutionOrder) {
             // Emulate LIFO execution order by systematically adding new operations as last operation's dependency
             [sself.lastAddedOperation addDependency:operation];
@@ -197,6 +215,11 @@
         }
     });
 }
+
+// 为每个URL绑定事件
+/**每一个URL都会被作为每个下载的唯一标识，
+ 每一个下载都会绑定一个progressBlock和completeBlock，
+ 最终我们还要使用这个URL跟NSOperation建立联系*/
 
 - (nullable SDWebImageDownloadToken *)addProgressCallback:(SDWebImageDownloaderProgressBlock)progressBlock
                                            completedBlock:(SDWebImageDownloaderCompletedBlock)completedBlock
