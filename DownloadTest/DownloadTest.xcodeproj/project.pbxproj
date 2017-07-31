@@ -7,6 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D61D3B711F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B6A1F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.m */; };
+		D61D3B721F29B7A100E973C2 /* SYQRCodeOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B6C1F29B7A100E973C2 /* SYQRCodeOverlayView.m */; };
+		D61D3B731F29B7A100E973C2 /* SYQRCodeUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B6E1F29B7A100E973C2 /* SYQRCodeUtility.m */; };
+		D61D3B741F29B7A100E973C2 /* SYQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B701F29B7A100E973C2 /* SYQRCodeViewController.m */; };
+		D61D3B781F29B84B00E973C2 /* FSAlertTools.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B771F29B84B00E973C2 /* FSAlertTools.m */; };
+		D61D3B931F29BB2C00E973C2 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B7B1F29BB2C00E973C2 /* MASCompositeConstraint.m */; };
+		D61D3B941F29BB2C00E973C2 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B7E1F29BB2C00E973C2 /* MASConstraint.m */; };
+		D61D3B951F29BB2C00E973C2 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B801F29BB2C00E973C2 /* MASConstraintMaker.m */; };
+		D61D3B961F29BB2C00E973C2 /* MASLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B821F29BB2C00E973C2 /* MASLayoutConstraint.m */; };
+		D61D3B971F29BB2C00E973C2 /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B861F29BB2C00E973C2 /* MASViewAttribute.m */; };
+		D61D3B981F29BB2C00E973C2 /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B881F29BB2C00E973C2 /* MASViewConstraint.m */; };
+		D61D3B991F29BB2C00E973C2 /* NSArray+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B8A1F29BB2C00E973C2 /* NSArray+MASAdditions.m */; };
+		D61D3B9A1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B8D1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.m */; };
+		D61D3B9B1F29BB2C00E973C2 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B8F1F29BB2C00E973C2 /* View+MASAdditions.m */; };
+		D61D3B9C1F29BB2C00E973C2 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B921F29BB2C00E973C2 /* ViewController+MASAdditions.m */; };
+		D61D3B9F1F29BBD700E973C2 /* UIColor+hexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3B9E1F29BBD700E973C2 /* UIColor+hexColor.m */; };
+		D61D3BB11F29F20B00E973C2 /* QRCodeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3BA91F29F20B00E973C2 /* QRCodeVC.m */; };
+		D61D3BB21F29F20B00E973C2 /* SubmitQRCodeRequestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3BAD1F29F20B00E973C2 /* SubmitQRCodeRequestModel.m */; };
+		D61D3BB31F29F20B00E973C2 /* QRCodeViewModle.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3BB01F29F20B00E973C2 /* QRCodeViewModle.m */; };
+		D61D3BB91F29F3D500E973C2 /* FSProgressViewTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3BB81F29F3D500E973C2 /* FSProgressViewTool.m */; };
+		D61D3BC01F29F42700E973C2 /* HudTipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D61D3BBF1F29F42700E973C2 /* HudTipItem.m */; };
+		D6A4467B1F2AC45200BD2AD6 /* HudTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A4467A1F2AC45200BD2AD6 /* HudTipView.m */; };
+		D6A446821F2AC64100BD2AD6 /* MBProgressHUD+MJ.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A4467E1F2AC64100BD2AD6 /* MBProgressHUD+MJ.m */; };
+		D6A446831F2AC64100BD2AD6 /* MBProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D6A4467F1F2AC64100BD2AD6 /* MBProgressHUD.bundle */; };
+		D6A446841F2AC64100BD2AD6 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A446811F2AC64100BD2AD6 /* MBProgressHUD.m */; };
 		D6DA41B11F26CE29006BAE69 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D6DA41B01F26CE29006BAE69 /* main.m */; };
 		D6DA41B41F26CE29006BAE69 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6DA41B31F26CE29006BAE69 /* AppDelegate.m */; };
 		D6DA41B71F26CE29006BAE69 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6DA41B61F26CE29006BAE69 /* ViewController.m */; };
@@ -57,6 +82,60 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D61D3B691F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVCaptureVideoPreviewLayer+layer.h"; sourceTree = "<group>"; };
+		D61D3B6A1F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVCaptureVideoPreviewLayer+layer.m"; sourceTree = "<group>"; };
+		D61D3B6B1F29B7A100E973C2 /* SYQRCodeOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYQRCodeOverlayView.h; sourceTree = "<group>"; };
+		D61D3B6C1F29B7A100E973C2 /* SYQRCodeOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYQRCodeOverlayView.m; sourceTree = "<group>"; };
+		D61D3B6D1F29B7A100E973C2 /* SYQRCodeUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYQRCodeUtility.h; sourceTree = "<group>"; };
+		D61D3B6E1F29B7A100E973C2 /* SYQRCodeUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYQRCodeUtility.m; sourceTree = "<group>"; };
+		D61D3B6F1F29B7A100E973C2 /* SYQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYQRCodeViewController.h; sourceTree = "<group>"; };
+		D61D3B701F29B7A100E973C2 /* SYQRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYQRCodeViewController.m; sourceTree = "<group>"; };
+		D61D3B761F29B84B00E973C2 /* FSAlertTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSAlertTools.h; sourceTree = "<group>"; };
+		D61D3B771F29B84B00E973C2 /* FSAlertTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSAlertTools.m; sourceTree = "<group>"; };
+		D61D3B7A1F29BB2C00E973C2 /* MASCompositeConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
+		D61D3B7B1F29BB2C00E973C2 /* MASCompositeConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASCompositeConstraint.m; sourceTree = "<group>"; };
+		D61D3B7C1F29BB2C00E973C2 /* MASConstraint+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MASConstraint+Private.h"; sourceTree = "<group>"; };
+		D61D3B7D1F29BB2C00E973C2 /* MASConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASConstraint.h; sourceTree = "<group>"; };
+		D61D3B7E1F29BB2C00E973C2 /* MASConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASConstraint.m; sourceTree = "<group>"; };
+		D61D3B7F1F29BB2C00E973C2 /* MASConstraintMaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASConstraintMaker.h; sourceTree = "<group>"; };
+		D61D3B801F29BB2C00E973C2 /* MASConstraintMaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASConstraintMaker.m; sourceTree = "<group>"; };
+		D61D3B811F29BB2C00E973C2 /* MASLayoutConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASLayoutConstraint.h; sourceTree = "<group>"; };
+		D61D3B821F29BB2C00E973C2 /* MASLayoutConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASLayoutConstraint.m; sourceTree = "<group>"; };
+		D61D3B831F29BB2C00E973C2 /* Masonry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Masonry.h; sourceTree = "<group>"; };
+		D61D3B841F29BB2C00E973C2 /* MASUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASUtilities.h; sourceTree = "<group>"; };
+		D61D3B851F29BB2C00E973C2 /* MASViewAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASViewAttribute.h; sourceTree = "<group>"; };
+		D61D3B861F29BB2C00E973C2 /* MASViewAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASViewAttribute.m; sourceTree = "<group>"; };
+		D61D3B871F29BB2C00E973C2 /* MASViewConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASViewConstraint.h; sourceTree = "<group>"; };
+		D61D3B881F29BB2C00E973C2 /* MASViewConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASViewConstraint.m; sourceTree = "<group>"; };
+		D61D3B891F29BB2C00E973C2 /* NSArray+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MASAdditions.h"; sourceTree = "<group>"; };
+		D61D3B8A1F29BB2C00E973C2 /* NSArray+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MASAdditions.m"; sourceTree = "<group>"; };
+		D61D3B8B1F29BB2C00E973C2 /* NSArray+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MASShorthandAdditions.h"; sourceTree = "<group>"; };
+		D61D3B8C1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLayoutConstraint+MASDebugAdditions.h"; sourceTree = "<group>"; };
+		D61D3B8D1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
+		D61D3B8E1F29BB2C00E973C2 /* View+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASAdditions.h"; sourceTree = "<group>"; };
+		D61D3B8F1F29BB2C00E973C2 /* View+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "View+MASAdditions.m"; sourceTree = "<group>"; };
+		D61D3B901F29BB2C00E973C2 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
+		D61D3B911F29BB2C00E973C2 /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
+		D61D3B921F29BB2C00E973C2 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
+		D61D3B9D1F29BBD700E973C2 /* UIColor+hexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+hexColor.h"; sourceTree = "<group>"; };
+		D61D3B9E1F29BBD700E973C2 /* UIColor+hexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+hexColor.m"; sourceTree = "<group>"; };
+		D61D3BA81F29F20B00E973C2 /* QRCodeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeVC.h; sourceTree = "<group>"; };
+		D61D3BA91F29F20B00E973C2 /* QRCodeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeVC.m; sourceTree = "<group>"; };
+		D61D3BAC1F29F20B00E973C2 /* SubmitQRCodeRequestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitQRCodeRequestModel.h; sourceTree = "<group>"; };
+		D61D3BAD1F29F20B00E973C2 /* SubmitQRCodeRequestModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitQRCodeRequestModel.m; sourceTree = "<group>"; };
+		D61D3BAF1F29F20B00E973C2 /* QRCodeViewModle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeViewModle.h; sourceTree = "<group>"; };
+		D61D3BB01F29F20B00E973C2 /* QRCodeViewModle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeViewModle.m; sourceTree = "<group>"; };
+		D61D3BB71F29F3D500E973C2 /* FSProgressViewTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSProgressViewTool.h; sourceTree = "<group>"; };
+		D61D3BB81F29F3D500E973C2 /* FSProgressViewTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSProgressViewTool.m; sourceTree = "<group>"; };
+		D61D3BBE1F29F42700E973C2 /* HudTipItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudTipItem.h; sourceTree = "<group>"; };
+		D61D3BBF1F29F42700E973C2 /* HudTipItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudTipItem.m; sourceTree = "<group>"; };
+		D6A446791F2AC45200BD2AD6 /* HudTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudTipView.h; sourceTree = "<group>"; };
+		D6A4467A1F2AC45200BD2AD6 /* HudTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudTipView.m; sourceTree = "<group>"; };
+		D6A4467D1F2AC64100BD2AD6 /* MBProgressHUD+MJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+MJ.h"; sourceTree = "<group>"; };
+		D6A4467E1F2AC64100BD2AD6 /* MBProgressHUD+MJ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+MJ.m"; sourceTree = "<group>"; };
+		D6A4467F1F2AC64100BD2AD6 /* MBProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MBProgressHUD.bundle; sourceTree = "<group>"; };
+		D6A446801F2AC64100BD2AD6 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D6A446811F2AC64100BD2AD6 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		D6DA41AC1F26CE29006BAE69 /* DownloadTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloadTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6DA41B01F26CE29006BAE69 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D6DA41B21F26CE29006BAE69 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -145,6 +224,130 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D61D3B681F29B7A100E973C2 /* QRCodeBuild */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3B691F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.h */,
+				D61D3B6A1F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.m */,
+				D61D3B6B1F29B7A100E973C2 /* SYQRCodeOverlayView.h */,
+				D61D3B6C1F29B7A100E973C2 /* SYQRCodeOverlayView.m */,
+				D61D3B6D1F29B7A100E973C2 /* SYQRCodeUtility.h */,
+				D61D3B6E1F29B7A100E973C2 /* SYQRCodeUtility.m */,
+				D61D3B6F1F29B7A100E973C2 /* SYQRCodeViewController.h */,
+				D61D3B701F29B7A100E973C2 /* SYQRCodeViewController.m */,
+			);
+			path = QRCodeBuild;
+			sourceTree = "<group>";
+		};
+		D61D3B751F29B84B00E973C2 /* FSAlertTools */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3B761F29B84B00E973C2 /* FSAlertTools.h */,
+				D61D3B771F29B84B00E973C2 /* FSAlertTools.m */,
+			);
+			path = FSAlertTools;
+			sourceTree = "<group>";
+		};
+		D61D3B791F29BB2C00E973C2 /* Masonry */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3B7A1F29BB2C00E973C2 /* MASCompositeConstraint.h */,
+				D61D3B7B1F29BB2C00E973C2 /* MASCompositeConstraint.m */,
+				D61D3B7C1F29BB2C00E973C2 /* MASConstraint+Private.h */,
+				D61D3B7D1F29BB2C00E973C2 /* MASConstraint.h */,
+				D61D3B7E1F29BB2C00E973C2 /* MASConstraint.m */,
+				D61D3B7F1F29BB2C00E973C2 /* MASConstraintMaker.h */,
+				D61D3B801F29BB2C00E973C2 /* MASConstraintMaker.m */,
+				D61D3B811F29BB2C00E973C2 /* MASLayoutConstraint.h */,
+				D61D3B821F29BB2C00E973C2 /* MASLayoutConstraint.m */,
+				D61D3B831F29BB2C00E973C2 /* Masonry.h */,
+				D61D3B841F29BB2C00E973C2 /* MASUtilities.h */,
+				D61D3B851F29BB2C00E973C2 /* MASViewAttribute.h */,
+				D61D3B861F29BB2C00E973C2 /* MASViewAttribute.m */,
+				D61D3B871F29BB2C00E973C2 /* MASViewConstraint.h */,
+				D61D3B881F29BB2C00E973C2 /* MASViewConstraint.m */,
+				D61D3B891F29BB2C00E973C2 /* NSArray+MASAdditions.h */,
+				D61D3B8A1F29BB2C00E973C2 /* NSArray+MASAdditions.m */,
+				D61D3B8B1F29BB2C00E973C2 /* NSArray+MASShorthandAdditions.h */,
+				D61D3B8C1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.h */,
+				D61D3B8D1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.m */,
+				D61D3B8E1F29BB2C00E973C2 /* View+MASAdditions.h */,
+				D61D3B8F1F29BB2C00E973C2 /* View+MASAdditions.m */,
+				D61D3B901F29BB2C00E973C2 /* View+MASShorthandAdditions.h */,
+				D61D3B911F29BB2C00E973C2 /* ViewController+MASAdditions.h */,
+				D61D3B921F29BB2C00E973C2 /* ViewController+MASAdditions.m */,
+			);
+			path = Masonry;
+			sourceTree = "<group>";
+		};
+		D61D3BA61F29F20B00E973C2 /* QRCode */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3BA71F29F20B00E973C2 /* Controller */,
+				D61D3BAA1F29F20B00E973C2 /* Model */,
+			);
+			path = QRCode;
+			sourceTree = "<group>";
+		};
+		D61D3BA71F29F20B00E973C2 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3BA81F29F20B00E973C2 /* QRCodeVC.h */,
+				D61D3BA91F29F20B00E973C2 /* QRCodeVC.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D61D3BAA1F29F20B00E973C2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3BAB1F29F20B00E973C2 /* RequestModel */,
+				D61D3BAE1F29F20B00E973C2 /* ViewModel */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D61D3BAB1F29F20B00E973C2 /* RequestModel */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3BAC1F29F20B00E973C2 /* SubmitQRCodeRequestModel.h */,
+				D61D3BAD1F29F20B00E973C2 /* SubmitQRCodeRequestModel.m */,
+			);
+			path = RequestModel;
+			sourceTree = "<group>";
+		};
+		D61D3BAE1F29F20B00E973C2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D61D3BAF1F29F20B00E973C2 /* QRCodeViewModle.h */,
+				D61D3BB01F29F20B00E973C2 /* QRCodeViewModle.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		D61D3BBD1F29F42700E973C2 /* HudTipView */ = {
+			isa = PBXGroup;
+			children = (
+				D6A446791F2AC45200BD2AD6 /* HudTipView.h */,
+				D6A4467A1F2AC45200BD2AD6 /* HudTipView.m */,
+				D61D3BBE1F29F42700E973C2 /* HudTipItem.h */,
+				D61D3BBF1F29F42700E973C2 /* HudTipItem.m */,
+			);
+			path = HudTipView;
+			sourceTree = "<group>";
+		};
+		D6A4467C1F2AC64100BD2AD6 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D6A4467D1F2AC64100BD2AD6 /* MBProgressHUD+MJ.h */,
+				D6A4467E1F2AC64100BD2AD6 /* MBProgressHUD+MJ.m */,
+				D6A4467F1F2AC64100BD2AD6 /* MBProgressHUD.bundle */,
+				D6A446801F2AC64100BD2AD6 /* MBProgressHUD.h */,
+				D6A446811F2AC64100BD2AD6 /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		D6DA41A31F26CE29006BAE69 = {
 			isa = PBXGroup;
 			children = (
@@ -172,6 +375,16 @@
 				D6DA41B31F26CE29006BAE69 /* AppDelegate.m */,
 				D6DA41B51F26CE29006BAE69 /* ViewController.h */,
 				D6DA41B61F26CE29006BAE69 /* ViewController.m */,
+				D61D3BB71F29F3D500E973C2 /* FSProgressViewTool.h */,
+				D61D3BB81F29F3D500E973C2 /* FSProgressViewTool.m */,
+				D61D3B9D1F29BBD700E973C2 /* UIColor+hexColor.h */,
+				D61D3B9E1F29BBD700E973C2 /* UIColor+hexColor.m */,
+				D6A4467C1F2AC64100BD2AD6 /* MBProgressHUD */,
+				D61D3BBD1F29F42700E973C2 /* HudTipView */,
+				D61D3BA61F29F20B00E973C2 /* QRCode */,
+				D61D3B791F29BB2C00E973C2 /* Masonry */,
+				D61D3B751F29B84B00E973C2 /* FSAlertTools */,
+				D61D3B681F29B7A100E973C2 /* QRCodeBuild */,
 				D6DA41E21F26CE4A006BAE69 /* SDWebImage */,
 				D6DA41B81F26CE29006BAE69 /* Main.storyboard */,
 				D6DA41BB1F26CE29006BAE69 /* Assets.xcassets */,
@@ -387,6 +600,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6DA41BF1F26CE29006BAE69 /* LaunchScreen.storyboard in Resources */,
+				D6A446831F2AC64100BD2AD6 /* MBProgressHUD.bundle in Resources */,
 				D6DA41BC1F26CE29006BAE69 /* Assets.xcassets in Resources */,
 				D6DA41BA1F26CE29006BAE69 /* Main.storyboard in Resources */,
 			);
@@ -417,26 +631,50 @@
 				D6DA421B1F26CE4A006BAE69 /* UIImageView+HighlightedWebCache.m in Sources */,
 				D6DA41B71F26CE29006BAE69 /* ViewController.m in Sources */,
 				D6DA42181F26CE4A006BAE69 /* SDWebImageManager.m in Sources */,
+				D61D3B991F29BB2C00E973C2 /* NSArray+MASAdditions.m in Sources */,
 				D6DA42131F26CE4A006BAE69 /* SDImageCacheConfig.m in Sources */,
+				D6A446841F2AC64100BD2AD6 /* MBProgressHUD.m in Sources */,
+				D6A4467B1F2AC45200BD2AD6 /* HudTipView.m in Sources */,
 				D6DA421F1F26CE4A006BAE69 /* UIImage+WebP.m in Sources */,
+				D61D3B731F29B7A100E973C2 /* SYQRCodeUtility.m in Sources */,
+				D61D3B9B1F29BB2C00E973C2 /* View+MASAdditions.m in Sources */,
+				D61D3B931F29BB2C00E973C2 /* MASCompositeConstraint.m in Sources */,
+				D61D3BB91F29F3D500E973C2 /* FSProgressViewTool.m in Sources */,
 				D6DA42171F26CE4A006BAE69 /* SDWebImageDownloaderOperation.m in Sources */,
 				D6DA42321F26E05D006BAE69 /* FLAnimatedImageView.m in Sources */,
 				D6DA42211F26CE4A006BAE69 /* UIView+WebCacheOperation.m in Sources */,
 				D6DA42111F26CE4A006BAE69 /* NSImage+WebCache.m in Sources */,
+				D61D3B781F29B84B00E973C2 /* FSAlertTools.m in Sources */,
 				D6DA421A1F26CE4A006BAE69 /* UIButton+WebCache.m in Sources */,
+				D61D3BB21F29F20B00E973C2 /* SubmitQRCodeRequestModel.m in Sources */,
 				D6DA420E1F26CE4A006BAE69 /* FLAnimatedImageView+WebCache.m in Sources */,
+				D61D3B971F29BB2C00E973C2 /* MASViewAttribute.m in Sources */,
 				D6DA42191F26CE4A006BAE69 /* SDWebImagePrefetcher.m in Sources */,
+				D61D3B941F29BB2C00E973C2 /* MASConstraint.m in Sources */,
 				D6DA42161F26CE4A006BAE69 /* SDWebImageDownloader.m in Sources */,
+				D61D3B741F29B7A100E973C2 /* SYQRCodeViewController.m in Sources */,
+				D61D3BB11F29F20B00E973C2 /* QRCodeVC.m in Sources */,
 				D6DA41B41F26CE29006BAE69 /* AppDelegate.m in Sources */,
+				D61D3BC01F29F42700E973C2 /* HudTipItem.m in Sources */,
+				D61D3B951F29BB2C00E973C2 /* MASConstraintMaker.m in Sources */,
 				D6DA42151F26CE4A006BAE69 /* SDWebImageDecoder.m in Sources */,
+				D61D3B711F29B7A100E973C2 /* AVCaptureVideoPreviewLayer+layer.m in Sources */,
+				D61D3B9C1F29BB2C00E973C2 /* ViewController+MASAdditions.m in Sources */,
 				D6DA421E1F26CE4A006BAE69 /* UIImage+MultiFormat.m in Sources */,
 				D6DA420F1F26CE4A006BAE69 /* MKAnnotationView+WebCache.m in Sources */,
+				D61D3B9A1F29BB2C00E973C2 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				D6DA42101F26CE4A006BAE69 /* NSData+ImageContentType.m in Sources */,
+				D6A446821F2AC64100BD2AD6 /* MBProgressHUD+MJ.m in Sources */,
+				D61D3B981F29BB2C00E973C2 /* MASViewConstraint.m in Sources */,
 				D6DA421C1F26CE4A006BAE69 /* UIImageView+WebCache.m in Sources */,
+				D61D3B9F1F29BBD700E973C2 /* UIColor+hexColor.m in Sources */,
 				D6DA42141F26CE4A006BAE69 /* SDWebImageCompat.m in Sources */,
+				D61D3B961F29BB2C00E973C2 /* MASLayoutConstraint.m in Sources */,
 				D6DA42311F26E05D006BAE69 /* FLAnimatedImage.m in Sources */,
 				D6DA421D1F26CE4A006BAE69 /* UIImage+GIF.m in Sources */,
 				D6DA41B11F26CE29006BAE69 /* main.m in Sources */,
+				D61D3B721F29B7A100E973C2 /* SYQRCodeOverlayView.m in Sources */,
+				D61D3BB31F29F20B00E973C2 /* QRCodeViewModle.m in Sources */,
 				D6DA42121F26CE4A006BAE69 /* SDImageCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -589,6 +827,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.formssi.DownloadTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -601,6 +840,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.formssi.DownloadTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -673,6 +913,7 @@
 				D6DA41DB1F26CE29006BAE69 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D6DA41DC1F26CE29006BAE69 /* Build configuration list for PBXNativeTarget "DownloadTestTests" */ = {
 			isa = XCConfigurationList;
@@ -681,6 +922,7 @@
 				D6DA41DE1F26CE29006BAE69 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D6DA41DF1F26CE29006BAE69 /* Build configuration list for PBXNativeTarget "DownloadTestUITests" */ = {
 			isa = XCConfigurationList;
@@ -689,6 +931,7 @@
 				D6DA41E11F26CE29006BAE69 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
