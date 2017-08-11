@@ -39,6 +39,13 @@
 
 @end
 
+/**
+ FOUNDATION_STATIC_INLINE表示该函数是一个具有文件内部访问权限的内联函数，
+ 所谓的内联函数就是建议编译器在调用时将函数展开。
+ 建议的意思就是说编译器不一定会按照你的建议做。因此内联函数尽量不要写的太复杂
+ 
+ 图像的实际的尺寸(像素)等于image.size乘以image.scale
+ */
 
 FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 #if SD_MAC
@@ -172,6 +179,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     return [self cachePathForKey:key inPath:self.diskCachePath];
 }
 
+// MD5
 - (nullable NSString *)cachedFileNameForKey:(nullable NSString *)key {
     const char *str = key.UTF8String;
     if (str == NULL) {
@@ -212,6 +220,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
             forKey:(nullable NSString *)key
             toDisk:(BOOL)toDisk
         completion:(nullable SDWebImageNoParamsBlock)completionBlock {
+    // 检查image或者key是否为nil
     if (!image || !key) {
         if (completionBlock) {
             completionBlock();
@@ -219,24 +228,28 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         return;
     }
     // if memory cache is enabled
+    // 根据配置文件中是否设置了缓存到内存，保存image到缓存中，这个过程是非常快的，因此不用考虑线程
     if (self.config.shouldCacheImagesInMemory) {
         // 根据内存缓存大小来缓存
         NSUInteger cost = SDCacheCostForImage(image);
         [self.memCache setObject:image forKey:key cost:cost];
     }
     
+    // 如果保存到Disk，创建异步串行队列 我们把数据保存到Disk，其实保存的应该是数据的二进制文件
     if (toDisk) {
         dispatch_async(self.ioQueue, ^{
             NSData *data = imageData;
             
+            // 如果不存在，需要把image转换成NSData
             if (!data && image) {
                 // 获取图片类型
                 SDImageFormat imageFormatFromData = [NSData sd_imageFormatForImageData:data];
                 // UIImage转化为NSData类型
                 data = [image sd_imageDataAsFormat:imageFormatFromData];
             }
-            // 保存到Disk
+            // 保存二进制数据到Disk
             [self storeImageDataToDisk:data forKey:key];
+            // 如果实现了completion
             if (completionBlock) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completionBlock();
@@ -252,24 +265,28 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 // 保存到Disk
 - (void)storeImageDataToDisk:(nullable NSData *)imageData forKey:(nullable NSString *)key {
+    // 检查imageData或者key是否为nil
     if (!imageData || !key) {
         return;
     }
     
+    // 检查是否在自身的队列中进行的操作
     [self checkIfQueueIsIOQueue];
     
+    // 创建Disk缓存文件夹
     if (![_fileManager fileExistsAtPath:_diskCachePath]) {
         [_fileManager createDirectoryAtPath:_diskCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
     }
     
-    // get cache Path for image key
+    // get cache Path for image key 根据key获取默认的缓存路径
     NSString *cachePathForKey = [self defaultCachePathForKey:key];
     // transform to NSUrl
     NSURL *fileURL = [NSURL fileURLWithPath:cachePathForKey];
     
+    // 将数据写入到上边获取的路径中
     [_fileManager createFileAtPath:cachePathForKey contents:imageData attributes:nil];
     
-    // disable iCloud backup
+    // disable iCloud backup 根据配置文件设置是否禁用iCloud的备份功能
     if (self.config.shouldDisableiCloud) {
         [fileURL setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:nil];
     }
@@ -277,6 +294,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 #pragma mark - Query and Retrieve Ops
 
+// 异步根据KEY判断图片是否缓存到disk
 - (void)diskImageExistsWithKey:(nullable NSString *)key completion:(nullable SDWebImageCheckCacheCompletionBlock)completionBlock {
     dispatch_async(_ioQueue, ^{
         BOOL exists = [_fileManager fileExistsAtPath:[self defaultCachePathForKey:key]];
@@ -295,20 +313,33 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     });
 }
 
+// 同步在内存查询图片
 - (nullable UIImage *)imageFromMemoryCacheForKey:(nullable NSString *)key {
     return [self.memCache objectForKey:key];
 }
 
+
+/**
+ - (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)g
+ 在缓存中设置指定键名对应的值，并且指定该键值对的成本，用于计算记录在缓存中的所有对象的总成本，出现内存警告或者超出缓存总成本上限的时候，缓存会开启一个回收过程，删除部分元素
+ 只有在很快能计算出“开销值”的情况下，才应该考虑采用这个尺度
+ 
+ 因为加入计算开销值的过程复杂，就违背了使用缓存的初衷——快速定位对象，比如，要从磁盘中读取文件大小，那么这个开销就过大，不应该计算开销值。但是加入缓存对象是NSData对象或者UIImage对象，可以直接获取其数据大小，将其数据大小当做开销值也是可以的。
+ 
+ */
+// 同步在disk查询图片,取出同时放在内存中
 - (nullable UIImage *)imageFromDiskCacheForKey:(nullable NSString *)key {
     UIImage *diskImage = [self diskImageForKey:key];
     if (diskImage && self.config.shouldCacheImagesInMemory) {
         NSUInteger cost = SDCacheCostForImage(diskImage);
+        
         [self.memCache setObject:diskImage forKey:key cost:cost];
     }
 
     return diskImage;
 }
 
+// 同步查找图片，先内存后disk
 - (nullable UIImage *)imageFromCacheForKey:(nullable NSString *)key {
     // First check the in-memory cache...
     UIImage *image = [self imageFromMemoryCacheForKey:key];
@@ -321,6 +352,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     return image;
 }
 
+// 查询所有的路径中包含的key
+/**
+ 根据key获取Disk中的NSData数据，
+ 总体思路就是先从默认的路径获取，如果没有获取到，再从自定义的路径获取，
+ 值得注意的是，要考虑没有pathExtention的情况
+ */
 - (nullable NSData *)diskImageDataBySearchingAllPathsForKey:(nullable NSString *)key {
     NSString *defaultPath = [self defaultCachePathForKey:key];
     NSData *data = [NSData dataWithContentsOfFile:defaultPath];
@@ -353,12 +390,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
     return nil;
 }
-
+// 由key查找Image
 - (nullable UIImage *)diskImageForKey:(nullable NSString *)key {
     NSData *data = [self diskImageDataBySearchingAllPathsForKey:key];
     if (data) {
         UIImage *image = [UIImage sd_imageWithData:data];
-        image = [self scaledImageForKey:key image:image];
+        image = [self scaledImageForKey:key image:image];// 
         if (self.config.shouldDecompressImages) {
             image = [UIImage decodedImageWithImage:image];
         }
@@ -373,6 +410,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     return SDScaledImageForKey(key, image);
 }
 
+// 异步查询图片是否存在
 - (nullable NSOperation *)queryCacheOperationForKey:(nullable NSString *)key done:(nullable SDCacheQueryCompletedBlock)doneBlock {
     if (!key) {
         if (doneBlock) {
@@ -457,10 +495,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     self.memCache.totalCostLimit = maxMemoryCost;
 }
 
+ //限制所有缓存对象大小不超过
 - (NSUInteger)maxMemoryCost {
     return self.memCache.totalCostLimit;
 }
 
+// 限制缓存对象的个数
 - (NSUInteger)maxMemoryCountLimit {
     return self.memCache.countLimit;
 }

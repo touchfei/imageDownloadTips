@@ -572,9 +572,9 @@ didReceiveResponse:(NSURLResponse *)response
 + (UIImageOrientation)orientationFromPropertyValue:(NSInteger)value {
     switch (value) {
         case 1:
-            return UIImageOrientationUp;
+            return UIImageOrientationUp;// default orientation
         case 3:
-            return UIImageOrientationDown;
+            return UIImageOrientationDown;// 180 deg rotation
         case 8:
             return UIImageOrientationLeft;
         case 6:
