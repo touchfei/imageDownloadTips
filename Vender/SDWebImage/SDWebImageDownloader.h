@@ -11,6 +11,7 @@
 #import "SDWebImageOperation.h"
 
 typedef NS_OPTIONS(NSUInteger, SDWebImageDownloaderOptions) {
+     // 图像下载置于低优先队列中
     SDWebImageDownloaderLowPriority = 1 << 0,
     // 带进度的
     SDWebImageDownloaderProgressiveDownload = 1 << 1,

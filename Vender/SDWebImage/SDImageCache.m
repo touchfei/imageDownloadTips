@@ -16,6 +16,8 @@
 #import "SDImageCacheConfig.h"
 
 // See https://github.com/rs/SDWebImage/pull/1141 for discussion
+
+// 当收到内存警告时，释放内存中缓存NSCache的所有资源
 @interface AutoPurgeCache : NSCache
 @end
 
@@ -411,6 +413,10 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 }
 
 // 异步查询图片是否存在
+/**
+ 如果在内存中获取到的图片是GIF，那么要去Disk中获取
+ 返回的NSOperation对象可以用来取消获取任务
+ */
 - (nullable NSOperation *)queryCacheOperationForKey:(nullable NSString *)key done:(nullable SDCacheQueryCompletedBlock)doneBlock {
     if (!key) {
         if (doneBlock) {
@@ -438,7 +444,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
             // do not call the completion if cancelled
             return;
         }
-
+// 从Disk中获取
         @autoreleasepool {
             NSData *diskData = [self diskImageDataBySearchingAllPathsForKey:key];
             UIImage *diskImage = [self diskImageForKey:key];
@@ -463,7 +469,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (void)removeImageForKey:(nullable NSString *)key withCompletion:(nullable SDWebImageNoParamsBlock)completion {
     [self removeImageForKey:key fromDisk:YES withCompletion:completion];
 }
-
+// 删除选项
 - (void)removeImageForKey:(nullable NSString *)key fromDisk:(BOOL)fromDisk withCompletion:(nullable SDWebImageNoParamsBlock)completion {
     if (key == nil) {
         return;
@@ -510,11 +516,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 }
 
 #pragma mark - Cache clean Ops
-
+// 清除内存中缓存
 - (void)clearMemory {
     [self.memCache removeAllObjects];
 }
 
+// 异步清除Disk缓存，（删除文件夹，创建文件夹）
 - (void)clearDiskOnCompletion:(nullable SDWebImageNoParamsBlock)completion {
     dispatch_async(self.ioQueue, ^{
         [_fileManager removeItemAtPath:self.diskCachePath error:nil];
@@ -534,12 +541,20 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (void)deleteOldFiles {
     [self deleteOldFilesWithCompletionBlock:nil];
 }
-
+/**
+ 清除旧数据
+ 1、清空所有过期的数据
+ 2、清空过期数据后缓存还大于设定的上限（最大缓存大小，默认不限制），就要继续清空缓存，直到小于上线为止
+    先对文件按修改时间排序，删除文件到最大缓存的一半时停止删除
+ */
 - (void)deleteOldFilesWithCompletionBlock:(nullable SDWebImageNoParamsBlock)completionBlock {
     dispatch_async(self.ioQueue, ^{
         NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
+        // resourceKeys = [是否是文件夹,最后修改时间,分配的尺寸]
         NSArray<NSString *> *resourceKeys = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey];
 
+        // NSDirectoryEnumerationSkipsHiddenFiles 是指忽略隐藏文件
+        // 获取一些有用的属性
         // This enumerator prefetches useful properties for our cache files.
         NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
                                                    includingPropertiesForKeys:resourceKeys
