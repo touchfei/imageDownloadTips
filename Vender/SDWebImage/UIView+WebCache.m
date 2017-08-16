@@ -34,10 +34,14 @@ static char TAG_ACTIVITY_SHOW;
                      setImageBlock:(nullable SDSetImageBlock)setImageBlock
                           progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                          completed:(nullable SDExternalCompletionBlock)completedBlock {
+    //如果operationKey为nil，就采用自己的类名作为Key
     NSString *validOperationKey = operationKey ?: NSStringFromClass([self class]);
+    // 根据Key取消之前的绑定的SDWebImageOperation operation
     [self sd_cancelImageLoadOperationWithKey:validOperationKey];
+    // 为自己关联一个key是imageURLKey的url(即关联一个属性及属性值)
     objc_setAssociatedObject(self, &imageURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
+    // 如果不是延迟显示占位图片，就给当前View设置一张占位图片
     if (!(options & SDWebImageDelayPlaceholder)) {
         dispatch_main_async_safe(^{
             [self sd_setImage:placeholder imageData:nil basedOnClassOrViaCustomSetImageBlock:setImageBlock];
@@ -45,15 +49,17 @@ static char TAG_ACTIVITY_SHOW;
     }
     
     if (url) {
-        // check if activityView is enabled or not
+        // check if activityView is enabled or not 检查activityView是否可用
         if ([self sd_showActivityIndicatorView]) {
-            [self sd_addActivityIndicator];
+            [self sd_addActivityIndicator];// 添加activityIndicator
         }
         
         __weak __typeof(self)wself = self;
         id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager loadImageWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             __strong __typeof (wself) sself = wself;
+            // 移除activityIndicator
             [sself sd_removeActivityIndicator];
+            // 如果self为nil，直接返回
             if (!sself) {
                 return;
             }
@@ -61,23 +67,26 @@ static char TAG_ACTIVITY_SHOW;
                 if (!sself) {
                     return;
                 }
+                // 如果image有值、completedBlock存在、options为SDWebImageAvoidAutoSetImage 时，返回block，不直接把image设置在view上
                 if (image && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
                     completedBlock(image, error, cacheType, url);
                     return;
-                } else if (image) {
+                } else if (image) {// 其他如果image有值，直接设置在view上，更新约束
                     [sself sd_setImage:image imageData:data basedOnClassOrViaCustomSetImageBlock:setImageBlock];
                     [sself sd_setNeedsLayout];
-                } else {
+                } else {// 其他情况及延时展示占位图片
                     if ((options & SDWebImageDelayPlaceholder)) {
                         [sself sd_setImage:placeholder imageData:nil basedOnClassOrViaCustomSetImageBlock:setImageBlock];
                         [sself sd_setNeedsLayout];
                     }
                 }
+                // 前面设置了image值，然后再回调
                 if (completedBlock && finished) {
                     completedBlock(image, error, cacheType, url);
                 }
             });
         }];
+        // 根据Key添加绑定的SDWebImageOperation operation
         [self sd_setImageLoadOperation:operation forKey:validOperationKey];
     } else {
         dispatch_main_async_safe(^{
@@ -95,20 +104,22 @@ static char TAG_ACTIVITY_SHOW;
 }
 
 - (void)sd_setImage:(UIImage *)image imageData:(NSData *)imageData basedOnClassOrViaCustomSetImageBlock:(SDSetImageBlock)setImageBlock {
+    // UIImageView+WebCache 中设置的setImageBlock = nil
+    // UIButton + WebCache setImageBlock ,如果button的状态设置了则存在
     if (setImageBlock) {
         setImageBlock(image, imageData);
         return;
     }
     
 #if SD_UIKIT || SD_MAC
-    if ([self isKindOfClass:[UIImageView class]]) {
+    if ([self isKindOfClass:[UIImageView class]]) {// 设置imageView中的image
         UIImageView *imageView = (UIImageView *)self;
         imageView.image = image;
     }
 #endif
     
 #if SD_UIKIT
-    if ([self isKindOfClass:[UIButton class]]) {
+    if ([self isKindOfClass:[UIButton class]]) { // 设置button中normal状态下的image
         UIButton *button = (UIButton *)self;
         [button setImage:image forState:UIControlStateNormal];
     }

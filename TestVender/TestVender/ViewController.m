@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "UIImageView+WebCache.h"
 
 @interface ViewController ()
 
@@ -16,7 +17,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+}
+
+- (void)testImageView {
+   UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:imageView];
+    
+    [imageView sd_setImageWithURL:[NSURL URLWithString:@""]];
+    
 }
 
 

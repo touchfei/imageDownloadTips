@@ -84,7 +84,7 @@ static const CGFloat kDestImageSizeMB = 60.0f;
 static const CGFloat kSourceImageTileSizeMB = 20.0f;
 
 static const CGFloat kBytesPerMB = 1024.0f * 1024.0f;   //  1MB有1024*1024字节
-static const CGFloat kPixelsPerMB = kBytesPerMB / kBytesPerPixel;   // 1MB有多少像素，即 1MB/4Byte
+static const CGFloat kPixelsPerMB = kBytesPerMB / kBytesPerPixel;   // 1MB有多少像素(262144)，即 1MB/4Byte
 static const CGFloat kDestTotalPixels = kDestImageSizeMB * kPixelsPerMB; // 目标总像素
 static const CGFloat kTileTotalPixels = kSourceImageTileSizeMB * kPixelsPerMB; //原图放大总像素
 
