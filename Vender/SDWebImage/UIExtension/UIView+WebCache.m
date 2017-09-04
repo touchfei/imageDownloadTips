@@ -34,6 +34,7 @@ static char TAG_ACTIVITY_SHOW;
                      setImageBlock:(nullable SDSetImageBlock)setImageBlock
                           progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                          completed:(nullable SDExternalCompletionBlock)completedBlock {
+    // 设置highlightedImage的operationKey为UIImageViewImageOperationHighlighted
     //如果operationKey为nil，就采用自己的类名作为Key
     NSString *validOperationKey = operationKey ?: NSStringFromClass([self class]);
     // 根据Key取消之前的绑定的SDWebImageOperation operation
