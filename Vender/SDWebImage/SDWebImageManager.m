@@ -144,7 +144,7 @@
         }
     }
 
-    // 6.会有两种情况让我们停止下载这个url指定的图片：
+    // 6.下面两种情况会让我们停止下载这个url指定的图片：
     // - url的长度为0
     //- options并没有选择SDWebImageRetryFailed(重新下载错误url)且这个url在黑名单之中
     // 调用完成Block，返回operation

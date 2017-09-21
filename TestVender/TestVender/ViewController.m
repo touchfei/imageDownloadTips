@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "UIImageView+WebCache.h"
 #import "FSTableViewCell.h"
+#import "AFNetworking.h"
 
 
 @interface ViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -52,6 +53,27 @@ static NSString *identifier = @"cell";
     
 }
 
+- (void)loadData
+{
+    AFURLSessionManager *mgr = [[AFURLSessionManager alloc] initWithSessionConfiguration:nil];
+    
+    NSURL *url = [NSURL URLWithString:@""];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    
+    NSSet<NSData *> *set = [AFSecurityPolicy certificatesInBundle:[NSBundle mainBundle]];
+    AFSecurityPolicy *security = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone withPinnedCertificates:set];
+    security.allowInvalidCertificates = true;
+    
+    
+    mgr.securityPolicy = security;
+    
+    NSURLSessionDataTask *task = [mgr dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        
+    }];
+    [task resume];
+}
 
 
 #pragma mark - UITableViewDataSource
