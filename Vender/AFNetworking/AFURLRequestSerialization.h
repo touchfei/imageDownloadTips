@@ -97,6 +97,7 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
 
 /**
  The string encoding used to serialize parameters. `NSUTF8StringEncoding` by default.
+ 字符串编码、默认是UTF8
  */
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
 
@@ -104,6 +105,7 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  Whether created requests can use the device’s cellular radio (if present). `YES` by default.
 
  @see NSMutableURLRequest -setAllowsCellularAccess:
+ 是否允许访问蜂窝网络
  */
 @property (nonatomic, assign) BOOL allowsCellularAccess;
 
@@ -111,6 +113,23 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  The cache policy of created requests. `NSURLRequestUseProtocolCachePolicy` by default.
 
  @see NSMutableURLRequest -setCachePolicy:
+ 缓存策略
+ 
+ 
+ NSURLRequestUseProtocolCachePolicy = 0, 默认的缓存策略，缓存不存在，就请求服务器数据，缓存存在，会根据response中的Cache-Control字段判断下一步操作，
+ 如：Cache-Control字段为must-revalidata，则询问服务器数据是否有更新，无更新的话直接返回用户缓存数据，若已更新，则请求服务端。
+ 
+ NSURLRequestReloadIgnoringLocalCacheData = 1,忽略本地缓存，不管有没有本地缓存，请求服务器数据
+ NSURLRequestReloadIgnoringLocalAndRemoteCacheData = 4, // Unimplemented 忽略本地缓存和中间代理，直接源server
+ NSURLRequestReloadIgnoringCacheData = NSURLRequestReloadIgnoringLocalCacheData,
+ 
+ NSURLRequestReturnCacheDataElseLoad = 2, 有缓存就用，不管其有效性，即Cache-Control字段，没有就访问源server
+ NSURLRequestReturnCacheDataDontLoad = 3,只加载本地数据，不做其他操作，适合没有网络的情况
+ 
+ NSURLRequestReloadRevalidatingCacheData = 5,// Unimplemented 缓存数据需得到服务器确认才能使用
+ 
+ 
+ 
  */
 @property (nonatomic, assign) NSURLRequestCachePolicy cachePolicy;
 
@@ -118,6 +137,7 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  Whether created requests should use the default cookie handling. `YES` by default.
 
  @see NSMutableURLRequest -setHTTPShouldHandleCookies:
+ 操作Cookies
  */
 @property (nonatomic, assign) BOOL HTTPShouldHandleCookies;
 
@@ -125,6 +145,11 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  Whether created requests can continue transmitting data before receiving a response from an earlier transmission. `NO` by default
 
  @see NSMutableURLRequest -setHTTPShouldUsePipelining:
+ 在HTTP链接中，一般都是一个请求对应一个连接，每次建立TCP连接是需要一定时间的。
+ 管道化，允许一次发送一组请求而不必等到响应。
+ 但是由于目前并不是所有服务器都支持这项功能，因此这个属性默认是不开启的。
+ 管线化使用同一TCP连接完成任务，因此能大大提高请求的时间。但是响应要和请求的顺序保持一致才行。
+ 使用场景：比如 首页发送很多的请求，可以考虑这种技术。但前提是建立连接成功才可以使用。
  */
 @property (nonatomic, assign) BOOL HTTPShouldUsePipelining;
 
@@ -132,6 +157,7 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  The network service type for created requests. `NSURLNetworkServiceTypeDefault` by default.
 
  @see NSMutableURLRequest -setNetworkServiceType:
+ 网络服务类型
  */
 @property (nonatomic, assign) NSURLRequestNetworkServiceType networkServiceType;
 
@@ -139,6 +165,7 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  The timeout interval, in seconds, for created requests. The default timeout interval is 60 seconds.
 
  @see NSMutableURLRequest -setTimeoutInterval:
+ 超时时间
  */
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
@@ -153,11 +180,14 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  - `User-Agent` with the contents of various bundle identifiers and OS designations
 
  @discussion To add or remove default request headers, use `setValue:forHTTPHeaderField:`.
+ 请求头信息
+ 
  */
 @property (readonly, nonatomic, strong) NSDictionary <NSString *, NSString *> *HTTPRequestHeaders;
 
 /**
  Creates and returns a serializer with default configuration.
+ 默认配置的实例
  */
 + (instancetype)serializer;
 
@@ -166,6 +196,8 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
 
  @param field The HTTP header to set a default value for
  @param value The value set as default for the specified header, or `nil`
+ 
+ 设置HTTP Header， value为nil时移除field
  */
 - (void)setValue:(nullable NSString *)value
 forHTTPHeaderField:(NSString *)field;
@@ -184,6 +216,8 @@ forHTTPHeaderField:(NSString *)field;
 
  @param username The HTTP basic auth username
  @param password The HTTP basic auth password
+ 根据username/password 设置 Authorization
+ 如果header中有Authorization这个字段，那么服务器会验证用户名和密码，如果不正确则返回401错误
  */
 - (void)setAuthorizationHeaderFieldWithUsername:(NSString *)username
                                        password:(NSString *)password;
@@ -199,6 +233,7 @@ forHTTPHeaderField:(NSString *)field;
 
 /**
  HTTP methods for which serialized requests will encode parameters as a query string. `GET`, `HEAD`, and `DELETE` by default.
+ // 需要把参数拼接到URL中的HTTP methods 默认这个集合中包含GET/HEAD/DELETE
  */
 @property (nonatomic, strong) NSSet <NSString *> *HTTPMethodsEncodingParametersInURI;
 
@@ -208,6 +243,11 @@ forHTTPHeaderField:(NSString *)field;
  @param style The serialization style.
 
  @see AFHTTPRequestQueryStringSerializationStyle
+ 可以自定义序列化的方法，这个方法通过block来实现，
+ AFNetworking内部查询字符串序列化会调用这个block
+ 
+ 比如我们需要自定义view时，也可以使用该方法
+ 比如pickerview上的bar的自定义
  */
 - (void)setQueryStringSerializationWithStyle:(AFHTTPRequestQueryStringSerializationStyle)style;
 
@@ -233,6 +273,8 @@ forHTTPHeaderField:(NSString *)field;
  @param error The error that occurred while constructing the request.
 
  @return An `NSMutableURLRequest` object.
+ 当method为GET/HEAD/DELETE时，参数会被拼接到URL中
+ 其他情况则会当做request的body处理
  */
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
                                  URLString:(NSString *)URLString
@@ -251,6 +293,8 @@ forHTTPHeaderField:(NSString *)field;
  @param error The error that occurred while constructing the request.
 
  @return An `NSMutableURLRequest` object
+ 
+ 支持上传数据，可以把本地沙盒或者内存中的数据发送到服务器
  */
 - (NSMutableURLRequest *)multipartFormRequestWithMethod:(NSString *)method
                                               URLString:(NSString *)URLString
@@ -268,6 +312,10 @@ forHTTPHeaderField:(NSString *)field;
  @discussion There is a bug in `NSURLSessionTask` that causes requests to not send a `Content-Length` header when streaming contents from an HTTP body, which is notably problematic when interacting with the Amazon S3 webservice. As a workaround, this method takes a request constructed with `multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:error:`, or any other request with an `HTTPBodyStream`, writes the contents to the specified file and returns a copy of the original request with the `HTTPBodyStream` property set to `nil`. From here, the file can either be passed to `AFURLSessionManager -uploadTaskWithRequest:fromFile:progress:completionHandler:`, or have its contents read into an `NSData` that's assigned to the `HTTPBody` property of the request.
 
  @see https://github.com/AFNetworking/AFNetworking/issues/1398
+ 
+ 可以把一个请求中的body数据保存到一个文件中，然后返回一个HTTPBodyStream为nil的请求,
+ NSURLSessionTask在使用流传数据，如果没拼接Content-Length会有问题，
+ 然后可以吧文件上传或者它转换为二进制文件上传
  */
 - (NSMutableURLRequest *)requestWithMultipartFormRequest:(NSURLRequest *)request
                              writingStreamContentsToFile:(NSURL *)fileURL
@@ -279,6 +327,7 @@ forHTTPHeaderField:(NSString *)field;
 
 /**
  The `AFMultipartFormData` protocol defines the methods supported by the parameter in the block argument of `AFHTTPRequestSerializer -multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:`.
+ 
  */
 @protocol AFMultipartFormData
 

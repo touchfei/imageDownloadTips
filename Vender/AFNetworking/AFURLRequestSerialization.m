@@ -48,6 +48,7 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
     static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
     static NSString * const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
 
+    //移除 URLQueryAllowedCharacterSet 中  :#[]@!$&'()*+,;= 这些字符，他们在query查询中需要转义
     NSMutableCharacterSet * allowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
     [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
 
@@ -81,6 +82,7 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 
 #pragma mark -
 
+// 键值对 模型
 @interface AFQueryStringPair : NSObject
 @property (readwrite, nonatomic, strong) id field;
 @property (readwrite, nonatomic, strong) id value;
@@ -92,6 +94,7 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 
 @implementation AFQueryStringPair
 
+// 键值对模型， field 为键，value为值
 - (instancetype)initWithField:(id)field value:(id)value {
     self = [super init];
     if (!self) {
@@ -104,6 +107,7 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
     return self;
 }
 
+// 拼接查询字符串对， field代表=号左边的键，value代表=号右边的数据值 e.g. id=123456
 - (NSString *)URLEncodedStringValue {
     if (!self.value || [self.value isEqual:[NSNull null]]) {
         return AFPercentEscapedStringFromString([self.field description]);
@@ -115,10 +119,12 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 @end
 
 #pragma mark -
-
+// 对函数的声明
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary);
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value);
 
+// 根据参数字典得到字符串，用于拼接到url后边
+// 由一个字符串数组根据连接符&拼接成一个字符串并返回
 NSString * AFQueryStringFromParameters(NSDictionary *parameters) {
     NSMutableArray *mutablePairs = [NSMutableArray array];
     for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
@@ -128,10 +134,14 @@ NSString * AFQueryStringFromParameters(NSDictionary *parameters) {
     return [mutablePairs componentsJoinedByString:@"&"];
 }
 
+
+
 NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary) {
     return AFQueryStringPairsFromKeyAndValue(nil, dictionary);
 }
 
+
+// 通过递归函数 逐层解析
 NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
     NSMutableArray *mutableQueryStringComponents = [NSMutableArray array];
 
@@ -174,11 +184,19 @@ NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 
 #pragma mark -
 
+// 监听元素的集合
 static NSArray * AFHTTPRequestSerializerObservedKeyPaths() {
     static NSArray *_AFHTTPRequestSerializerObservedKeyPaths = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _AFHTTPRequestSerializerObservedKeyPaths = @[NSStringFromSelector(@selector(allowsCellularAccess)), NSStringFromSelector(@selector(cachePolicy)), NSStringFromSelector(@selector(HTTPShouldHandleCookies)), NSStringFromSelector(@selector(HTTPShouldUsePipelining)), NSStringFromSelector(@selector(networkServiceType)), NSStringFromSelector(@selector(timeoutInterval))];
+        _AFHTTPRequestSerializerObservedKeyPaths =
+  @[NSStringFromSelector(@selector(allowsCellularAccess)),// 允许蜂窝访问
+    NSStringFromSelector(@selector(cachePolicy)),           // 缓存策略
+    NSStringFromSelector(@selector(HTTPShouldHandleCookies)),// 使用cookies
+    NSStringFromSelector(@selector(HTTPShouldUsePipelining)),// 使用管线连接
+    NSStringFromSelector(@selector(networkServiceType)),// 网络服务类型
+    NSStringFromSelector(@selector(timeoutInterval)) // 超时时间
+    ];
     });
 
     return _AFHTTPRequestSerializerObservedKeyPaths;
@@ -210,12 +228,14 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
     self.mutableHTTPRequestHeaders = [NSMutableDictionary dictionary];
 
     // Accept-Language HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
+    // 传递可接受的语言，q代表对语言的喜好程度，默认取出前5个数据，不足5个，则取实际个数
     NSMutableArray *acceptLanguagesComponents = [NSMutableArray array];
     [[NSLocale preferredLanguages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         float q = 1.0f - (idx * 0.1f);
         [acceptLanguagesComponents addObject:[NSString stringWithFormat:@"%@;q=%0.1g", obj, q]];
         *stop = q <= 0.5f;
     }];
+    // 设置请求头
     [self setValue:[acceptLanguagesComponents componentsJoinedByString:@", "] forHTTPHeaderField:@"Accept-Language"];
 
     NSString *userAgent = nil;
@@ -267,6 +287,7 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
 // Workarounds for crashing behavior using Key-Value Observing with XCTest
 // See https://github.com/AFNetworking/AFNetworking/issues/2523
 
+// 触发kvo监听
 - (void)setAllowsCellularAccess:(BOOL)allowsCellularAccess {
     [self willChangeValueForKey:NSStringFromSelector(@selector(allowsCellularAccess))];
     _allowsCellularAccess = allowsCellularAccess;
@@ -611,33 +632,50 @@ NSUInteger const kAFUploadStream3GSuggestedPacketSize = 1024 * 16;
 NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
 @interface AFHTTPBodyPart : NSObject
+// 编码方式
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
+// 头
 @property (nonatomic, strong) NSDictionary *headers;
+// 边界
 @property (nonatomic, copy) NSString *boundary;
+// 请求体
 @property (nonatomic, strong) id body;
+// 请求体 内容大小
 @property (nonatomic, assign) unsigned long long bodyContentLength;
+// 输入流
 @property (nonatomic, strong) NSInputStream *inputStream;
 
+// 是否有初始边界
 @property (nonatomic, assign) BOOL hasInitialBoundary;
+// 是否有结束边界
 @property (nonatomic, assign) BOOL hasFinalBoundary;
 
+// 是否有可用字节
 @property (readonly, nonatomic, assign, getter = hasBytesAvailable) BOOL bytesAvailable;
+// 长度
 @property (readonly, nonatomic, assign) unsigned long long contentLength;
 
 - (NSInteger)read:(uint8_t *)buffer
         maxLength:(NSUInteger)length;
 @end
 
+//AFMultipartBodyStream 管道流
 @interface AFMultipartBodyStream : NSInputStream <NSStreamDelegate>
+// 读取的包的大小
 @property (nonatomic, assign) NSUInteger numberOfBytesInPacket;
+// 延时
 @property (nonatomic, assign) NSTimeInterval delay;
+// 输入流
 @property (nonatomic, strong) NSInputStream *inputStream;
+// 内容大小
 @property (readonly, nonatomic, assign) unsigned long long contentLength;
+// 是否为空
 @property (readonly, nonatomic, assign, getter = isEmpty) BOOL empty;
 
 - (instancetype)initWithStringEncoding:(NSStringEncoding)encoding;
 - (void)setInitialAndFinalBoundaries;
 - (void)appendHTTPBodyPart:(AFHTTPBodyPart *)bodyPart;
+
 @end
 
 #pragma mark -
@@ -1001,8 +1039,9 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
 @end
 
-#pragma mark -
+#pragma mark - AFHTTPBodyPart
 
+// 使用枚举包装body的4大组成部分
 typedef enum {
     AFEncapsulationBoundaryPhase = 1,
     AFHeaderPhase                = 2,
@@ -1011,12 +1050,13 @@ typedef enum {
 } AFHTTPBodyPartReadPhase;
 
 @interface AFHTTPBodyPart () <NSCopying> {
-    AFHTTPBodyPartReadPhase _phase;
-    NSInputStream *_inputStream;
-    unsigned long long _phaseReadOffset;
+    AFHTTPBodyPartReadPhase _phase;// body的4个组成部分
+    NSInputStream *_inputStream;// 输入流
+    unsigned long long _phaseReadOffset;// 每个组成部分的位置
 }
-
+// 转移到下一个阶段
 - (BOOL)transitionToNextPhase;
+// 读取数据
 - (NSInteger)readData:(NSData *)data
            intoBuffer:(uint8_t *)buffer
             maxLength:(NSUInteger)length;
@@ -1042,6 +1082,7 @@ typedef enum {
     }
 }
 
+// 根据body不同的类型--使用不同创建方法--创建NSInputStream
 - (NSInputStream *)inputStream {
     if (!_inputStream) {
         if ([self.body isKindOfClass:[NSData class]]) {
@@ -1058,6 +1099,18 @@ typedef enum {
     return _inputStream;
 }
 
+/**
+ headers字典来拼接body头
+ 
+ Content-Disposition: form-data; name="record"; filename="record.jpg"
+ Content-Type: application/json
+ 
+ {
+ "Content-Disposition" = "form-data; name=\"record\"; filename=\"record.jpg\"";
+ "Content-Type" = "application/json";
+ }
+ 
+ */
 - (NSString *)stringForHeaders {
     NSMutableString *headerString = [NSMutableString string];
     for (NSString *field in [self.headers allKeys]) {
@@ -1067,18 +1120,22 @@ typedef enum {
 
     return [NSString stringWithString:headerString];
 }
-
+//获取body的大小
 - (unsigned long long)contentLength {
     unsigned long long length = 0;
 
+    // 初始边界
     NSData *encapsulationBoundaryData = [([self hasInitialBoundary] ? AFMultipartFormInitialBoundary(self.boundary) : AFMultipartFormEncapsulationBoundary(self.boundary)) dataUsingEncoding:self.stringEncoding];
     length += [encapsulationBoundaryData length];
 
+    // 头
     NSData *headersData = [[self stringForHeaders] dataUsingEncoding:self.stringEncoding];
     length += [headersData length];
 
+    // 主体
     length += _bodyContentLength;
 
+    // 结束边界
     NSData *closingBoundaryData = ([self hasFinalBoundary] ? [AFMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:self.stringEncoding] : [NSData data]);
     length += [closingBoundaryData length];
 
@@ -1167,6 +1224,7 @@ typedef enum {
 }
 
 - (BOOL)transitionToNextPhase {
+    // 保证代码在主线程执行
     if (![[NSThread currentThread] isMainThread]) {
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self transitionToNextPhase];
@@ -1181,11 +1239,13 @@ typedef enum {
             _phase = AFHeaderPhase;
             break;
         case AFHeaderPhase:
+            // 打开流，准备接受数据
             [self.inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
             [self.inputStream open];
             _phase = AFBodyPhase;
             break;
         case AFBodyPhase:
+            // 关闭流
             [self.inputStream close];
             _phase = AFFinalBoundaryPhase;
             break;
@@ -1194,6 +1254,7 @@ typedef enum {
             _phase = AFEncapsulationBoundaryPhase;
             break;
     }
+    // 重置offset
     _phaseReadOffset = 0;
 #pragma clang diagnostic pop
 

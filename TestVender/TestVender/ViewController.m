@@ -55,12 +55,15 @@ static NSString *identifier = @"cell";
 
 - (void)loadData
 {
-    AFURLSessionManager *mgr = [[AFURLSessionManager alloc] initWithSessionConfiguration:nil];
+    AFHTTPSessionManager *mgr = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:nil];
     
-    NSURL *url = [NSURL URLWithString:@""];
+    NSDictionary *parameters = @{@"foo": @"bar", @"baz": @[@1, @2, @3]};
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+//    NSURL *url = [NSURL URLWithString:@""];
     
+//     [NSMutableURLRequest requestWithURL:url];
+    
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:@"www.baidu.com" parameters:parameters error:nil];
     
     NSSet<NSData *> *set = [AFSecurityPolicy certificatesInBundle:[NSBundle mainBundle]];
     AFSecurityPolicy *security = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone withPinnedCertificates:set];
@@ -70,6 +73,17 @@ static NSString *identifier = @"cell";
     mgr.securityPolicy = security;
     
     NSURLSessionDataTask *task = [mgr dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        
+    }];
+    [task resume];
+}
+
+
+- (void)request
+{
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"www.baidu.com"]];
+    NSURLSession *seesion = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [seesion dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
     [task resume];
