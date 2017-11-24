@@ -27,6 +27,13 @@
 /**
  *	Modifies the NSLayoutConstraint constant,
  *  only affects MASConstraints in which the first item's NSLayoutAttribute is one of the following
+ *  NSLayoutAttributeTop, NSLayoutAttributeLeft, NSLayoutAttributeBottom, NSLayoutAttributeRight
+ */
+- (MASConstraint * (^)(CGFloat inset))inset;
+
+/**
+ *	Modifies the NSLayoutConstraint constant,
+ *  only affects MASConstraints in which the first item's NSLayoutAttribute is one of the following
  *  NSLayoutAttributeWidth, NSLayoutAttributeHeight
  */
 - (MASConstraint * (^)(CGSize offset))sizeOffset;
@@ -66,17 +73,17 @@
 /**
  *	Sets the NSLayoutConstraint priority to MASLayoutPriorityLow
  */
-- (MASConstraint * (^)())priorityLow;
+- (MASConstraint * (^)(void))priorityLow;
 
 /**
  *	Sets the NSLayoutConstraint priority to MASLayoutPriorityMedium
  */
-- (MASConstraint * (^)())priorityMedium;
+- (MASConstraint * (^)(void))priorityMedium;
 
 /**
  *	Sets the NSLayoutConstraint priority to MASLayoutPriorityHigh
  */
-- (MASConstraint * (^)())priorityHigh;
+- (MASConstraint * (^)(void))priorityHigh;
 
 /**
  *	Sets the constraint relation to NSLayoutRelationEqual
@@ -127,6 +134,9 @@
 - (MASConstraint *)centerY;
 - (MASConstraint *)baseline;
 
+- (MASConstraint *)firstBaseline;
+- (MASConstraint *)lastBaseline;
+
 #if TARGET_OS_IPHONE || TARGET_OS_TV
 
 - (MASConstraint *)leftMargin;
@@ -155,6 +165,13 @@
  *  NSLayoutAttributeTop, NSLayoutAttributeLeft, NSLayoutAttributeBottom, NSLayoutAttributeRight
  */
 - (void)setInsets:(MASEdgeInsets)insets;
+
+/**
+ *	Modifies the NSLayoutConstraint constant,
+ *  only affects MASConstraints in which the first item's NSLayoutAttribute is one of the following
+ *  NSLayoutAttributeTop, NSLayoutAttributeLeft, NSLayoutAttributeBottom, NSLayoutAttributeRight
+ */
+- (void)setInset:(CGFloat)inset;
 
 /**
  *	Modifies the NSLayoutConstraint constant,

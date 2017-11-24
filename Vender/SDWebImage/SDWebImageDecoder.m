@@ -96,7 +96,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
         return image;
     }
     
-    if (![UIImage shouldScaleDownImage:image]) {// 当前图像的大小与目标大小比较，判断是否需要裁剪
+    if (![UIImage shouldScaleDownImage:image]) {// 当前图像像素的大小与目标像素大小比较，判断是否需要裁剪
         return [UIImage decodedImageWithImage:image];
     }
     
